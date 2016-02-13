@@ -7,16 +7,20 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'firebase'])
 
-.constant('FirebaseUrl', 'https://ionicle.firebaseio.com/')
+  .constant('FirebaseUrl', 'https://ledgr.firebaseio.com/')
+  .constant('UsersUrl', 'https://ledgr.firebaseio.com/users')
+  .constant('LedgrsUrl', 'https://ledgr.firebaseio.com/ledgrs')
 
-.service('rootRef', ['FirebaseUrl', Firebase])
+  .service('rootRef', ['FirebaseUrl', Firebase])
+  .service('usersRef', ['UsersUrl', Firebase])
+  .service('ledgrsRef', ['LedgrsUrl', Firebase])
 
-.run(ApplicationRun)
+  .run(ApplicationRun)
 
-.config(ApplicationConfig);
+  .config(ApplicationConfig);
 
 function ApplicationRun($ionicPlatform, $rootScope, $state) {
-  $ionicPlatform.ready(function() {
+  $ionicPlatform.ready(function () {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -29,7 +33,7 @@ function ApplicationRun($ionicPlatform, $rootScope, $state) {
     }
   });
 
-  $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
+  $rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
     // We can catch the error thrown when the $requireAuth promise is rejected
     // and redirect the user back to the home page
     if (error === 'AUTH_REQUIRED') {
@@ -49,61 +53,41 @@ function ApplicationConfig($stateProvider, $urlRouterProvider) {
 
   $stateProvider
 
-  .state('login', {
-    url: '/login',
-    templateUrl: 'templates/login.html',
-    controller: 'LoginCtrl as ctrl'
-  })
+    .state('login', {
+      url: '/login',
+      templateUrl: 'templates/login.html',
+      controller: 'LoginCtrl as ctrl'
+    })
 
-  // setup an abstract state for the tabs directive
-  .state('tab', {
-    url: '/tab',
-    abstract: true,
-    templateUrl: 'templates/tabs.html',
-    resolve: {
-      authData: AuthDataResolver
-    }
-  })
-
-  // Each tab has its own nav history stack:
-  .state('tab.dash', {
-    url: '/dash',
-    views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
+    // setup an abstract state for the tabs directive
+    .state('tab', {
+      url: '/tab',
+      abstract: true,
+      templateUrl: 'templates/tabs.html',
+      controller: 'AppCtrl as appCtrl',
+      resolve: {
+        authData: AuthDataResolver
       }
-    }
-  })
-
-  .state('tab.chats', {
-      url: '/chats',
+    })
+    // Each tab has its own nav history stack:
+    .state('tab.ledgrs', {
+      url: '/ledgrs',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
+        'tab-ledgrs': {
+          templateUrl: 'templates/tab-ledgrs.html',
+          controller: 'LedgrsCtrl'
         }
       }
     })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
+    .state('tab.account', {
+      url: '/account',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
+        'tab-account': {
+          templateUrl: 'templates/tab-account.html',
+          controller: 'AccountCtrl'
         }
       }
-    })
-
-  .state('tab.account', {
-    url: '/account',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
-      }
-    }
-  });
+    });
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');

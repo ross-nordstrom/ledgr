@@ -1,32 +1,57 @@
 angular.module('starter.controllers', ['firebase'])
 
-.controller('LoginCtrl', LoginCtrl)
+  .controller('LoginCtrl', LoginCtrl)
 
-.controller('DashCtrl', DashCtrl)
+  .controller('AppCtrl', AppCtrl)
 
-.controller('ChatsCtrl', ChatsCtrl)
+  .controller('LedgrsCtrl', LedgrsCtrl)
 
-.controller('ChatDetailCtrl', ChatDetailCtrl)
+  .controller('ChatsCtrl', ChatsCtrl)
 
-.controller('AccountCtrl', AccountCtrl);
+  .controller('ChatDetailCtrl', ChatDetailCtrl)
 
-function LoginCtrl(Auth, $state) {
+  .controller('AccountCtrl', AccountCtrl);
+
+function LoginCtrl(Auth, User, $state) {
 
   this.loginWithGoogle = function loginWithGoogle() {
     Auth.$authWithOAuthPopup('google')
-      .then(function(authData) {
-        $state.go('tab.dash');
+      .then(function (authData) {
+        User.create(authData);
+        $state.go('tab.ledgrs');
       });
   };
 
 }
-LoginCtrl.$inject = ['Auth', '$state'];
+LoginCtrl.$inject = ['Auth', 'User', '$state'];
 
-function DashCtrl() {}
+function AppCtrl($scope, FirebaseUrl, $firebaseArray) {
+
+}
+AppCtrl.$inject = ['$scope', 'FirebaseUrl', '$firebaseArray'];
+
+function LedgrsCtrl($scope, Ledgr) {
+  $scope.ledgrs = Ledgr.all();
+  angular.extend($scope, Ledgr); // Copy the Ledgr service's API onto scope
+
+  $scope.create = function (ledgr) {
+    return Ledgr.create(ledgr)
+      .then(function () {
+        $scope.ledgr = {};
+      });
+  }
+}
+LedgrsCtrl.$inject = ['$scope', 'Ledgr'];
+
+function UsersCtrl($scope, User) {
+  $scope.users = User.all();
+  angular.extend($scope, User); // Copy the User service's API onto scope
+}
+LedgrsCtrl.$inject = ['$scope', 'Ledgr'];
 
 function ChatsCtrl($scope, Chats) {
   $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
+  $scope.remove = function (chat) {
     Chats.remove(chat);
   };
 }

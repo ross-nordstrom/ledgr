@@ -4,6 +4,8 @@
 node_modules/
 platforms/
 plugins/
+.idea/
+*.iml
 .tmp
 .sass-cache
 **/bower_components or sometimes it is lib/**
