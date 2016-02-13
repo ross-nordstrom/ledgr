@@ -79,6 +79,15 @@ function ApplicationConfig($stateProvider, $urlRouterProvider) {
         }
       }
     })
+    .state('tab.ledgr-detail', {
+      url: '/ledgrs/:ledgrId',
+      views: {
+        'tab-ledgrs': {
+          templateUrl: 'templates/ledgr-detail.html',
+          controller: 'LedgrCtrl'
+        }
+      }
+    })
     .state('tab.account', {
       url: '/account',
       views: {
@@ -87,7 +96,32 @@ function ApplicationConfig($stateProvider, $urlRouterProvider) {
           controller: 'AccountCtrl'
         }
       }
-    });
+    })
+  //
+  //.state('tab.ledgrs.ledgr', {
+  //  url: '/:ledgrId',
+  //  abstract: true,
+  //  templateUrl: 'templates/ledgr/tabs.html',
+  //  controller: 'LedgrCtrl as ledgrCtrl'
+  //})
+  //.state('tab.ledgrs.ledgr.timeline', {
+  //  url: '/timeline',
+  //  views: {
+  //    'tab-ledgrs': {
+  //      templateUrl: 'templates/ledgr/tab-timeline.html',
+  //      controller: 'TimelineCtrl'
+  //    }
+  //  }
+  //})
+  //.state('tab.ledgrs.ledgr.users', {
+  //  url: '/users',
+  //  views: {
+  //    'tab-ledgrs': {
+  //      templateUrl: 'templates/ledgr/tab-users.html',
+  //      controller: 'UsersCtrl'
+  //    }
+  //  }
+  //});
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');

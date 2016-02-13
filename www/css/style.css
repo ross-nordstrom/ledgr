@@ -1,1 +1,8 @@
 /* Empty. Add your own CSS if you like */
+
+.banner-image {
+  width: 100%;
+  background-size: contain;
+  background-position: center center, top top;
+  background-repeat: no-repeat;
+}

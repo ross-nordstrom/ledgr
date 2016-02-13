@@ -1,8 +1,12 @@
 angular.module('starter.services', ['firebase'])
 
+  .service('Ledgrs', Ledgrs)
   .service('Ledgr', Ledgr)
   .service('User', User)
+
+
   .service('Chats', Chats)
+
 
   .factory('Auth', Auth);
 
@@ -11,16 +15,16 @@ function Auth(rootRef, $firebaseAuth) {
 }
 Auth.$inject = ['rootRef', '$firebaseAuth'];
 
-function Ledgr(ledgrsRef, $firebaseArray) {
+function Ledgrs(ledgrsRef, $firebaseArray) {
 
   var ledgrs = $firebaseArray(ledgrsRef);
 
   this.create = function (ledgr) {
     return ledgrs.$add(ledgr);
   };
-  this.all= function() {
+  this.all = function () {
     return ledgrs;
-  }
+  };
   this.get = function (ledgrId) {
     return ledgrs.$getRecord(ledgrId);
   };
@@ -31,9 +35,22 @@ function Ledgr(ledgrsRef, $firebaseArray) {
     return ledgrs.$remove(ledgr);
   };
 }
-Ledgr.$inject = ['ledgrsRef', '$firebaseArray'];
+Ledgrs.$inject = ['ledgrsRef', '$firebaseArray'];
 
-function User(usersRef, $firebaseObject) {
+
+function Ledgr(ledgrsRef, $firebaseObject, Firebase) {
+
+  this.construct = function (ledgrId) {
+    var ledgrRef = new Firebase(ledgrsRef.toString() + '/' + ledgrId);
+    var ledgr = $firebaseObject(ledgrRef);
+
+    return ledgr;
+  };
+}
+Ledgr.$inject = ['ledgrsRef', '$firebaseObject', 'Firebase'];
+
+
+function User(usersRef, $firebaseObject, Firebase) {
 
   var users = $firebaseObject(usersRef);
 
@@ -44,8 +61,15 @@ function User(usersRef, $firebaseObject) {
     users[user.uid] = user;
     return users.$save();
   };
+  this.get = function (userId) {
+    if (!userId.length) throw new Error('Expecting userId');
+
+    var userRef = new Firebase(usersRef.toString() + '/' + userId);
+    return $firebaseObject(userRef);
+  }
 }
-User.$inject = ['usersRef', '$firebaseObject'];
+User.$inject = ['usersRef', '$firebaseObject', 'Firebase'];
+
 
 function Chats() {
   // Might use a resource here that returns a JSON array
