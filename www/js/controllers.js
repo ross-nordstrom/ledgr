@@ -19,7 +19,7 @@ function LoginCtrl(Auth, User, $state) {
     Auth.$authWithOAuthPopup('google')
       .then(function (authData) {
         User.create(authData);
-        $state.go('app.tab.ledgrs');
+        $state.go('tab.ledgrs');
       });
   };
 
@@ -81,12 +81,13 @@ function FriendsCtrl($scope, User) {
 }
 FriendsCtrl.$inject = ['$scope', 'User'];
 
-function LedgrCtrl($scope, $stateParams, Ledgr) {
+function LedgrCtrl($scope, $stateParams, authData, Ledgr, User) {
   var ldgrCtrl = this;
+  ldgrCtrl.user = User.get(authData.uid);
   ldgrCtrl.ledgrId = $stateParams.ledgrId;
   ldgrCtrl.ledgr = Ledgr.construct(ldgrCtrl.ledgrId);
 }
-LedgrCtrl.$inject = ['$scope', '$stateParams', 'Ledgr'];
+LedgrCtrl.$inject = ['$scope', '$stateParams', 'authData', 'Ledgr', 'User'];
 
 function LedgrDetailsCtrl($scope, Ledgr) {
   $scope.ledgr = $scope.ldgrCtrl.ledgr;
@@ -108,7 +109,7 @@ function TimelineCtrl($scope, $state, $ionicModal, Ledgr) {
 
   $scope.addEntry = function (entry) {
 
-  }
+  };
 
   $ionicModal.fromTemplateUrl('templates/ledgr/entry-modal.html', {
     scope: $scope,
