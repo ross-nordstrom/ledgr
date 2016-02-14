@@ -204,12 +204,15 @@ function TimelineCtrl($scope, $state, $ionicModal, $filter, Ledgr) {
 
   function decodeEntry(entry) {
     entry.paidBy = $scope.ledgr.users[entry.paidBy];
-    entry.beneficiaries[entry.paidBy.id] = entry.paidBy.id;
     entry.time = entry.time.valueOf();
 
+    var beneficiaries = {};
     Object.keys(entry.beneficiaries).forEach(function (userId) {
-      entry.beneficiaries[userId] = $scope.ledgr.users[userId];
+      if (entry.beneficiaries[userId]) {
+        beneficiaries[userId] = $scope.ledgr.users[userId];
+      }
     });
+    entry.beneficiaries = beneficiaries;
   }
 
   //Cleanup the modal when we're done with it!
