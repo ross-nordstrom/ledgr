@@ -53,6 +53,10 @@ function FriendsCtrl($scope, User) {
   $scope.searchUsers = function (name) {
     $scope.searchResults = User.search(name);
   };
+  $scope.removeFriend = function (friendId) {
+    delete $scope.user.friends[friendId];
+    return $scope.user.$save();
+  };
   $scope.addFriend = function (friendId, friendInfo) {
     $scope.user.friends = $scope.user.friends || {};
     $scope.user.friends[friendId] = friendInfo;
