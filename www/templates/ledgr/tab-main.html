@@ -14,7 +14,7 @@
       <ion-list>
         <button class="button button-block button-dark" ng-click="openModal()">New Ledgr Entry</button>
         <ion-item class="item-remove-animate item-avatar" ng-repeat="entry in ledgr.entries"
-                  type="item-text-wrap"><!--href="#/friends/{{friend.$id}}"-->
+                  type="item-text-wrap" ng-click="editEntry(entry)">
           <img ng-src="{{entry.paidBy.pic}}">
 
           <h2>${{entry.price}} &nbsp;&nbsp; {{entry.description}}</h2>

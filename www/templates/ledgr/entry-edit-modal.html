@@ -1,9 +1,9 @@
 <ion-modal-view>
   <ion-header-bar class="bar-positive">
-    <h1 class="title">New Ledgr Entry</h1>
+    <h1 class="title">Edit Ledgr Entry</h1>
   </ion-header-bar>
   <ion-content>
-    <form class="list" ng-submit="addEntry(entry).then(closeModal)">
+    <form class="list" ng-submit="updateEntry(entry).then(closeEditModal)">
       <label class="item item-input">
         <input required autofocus type="number" min="0" step="any" ng-model="entry.price"
                placeholder="Amount (e.g. $1.23)">
@@ -34,7 +34,7 @@
         <input type="checkbox" placeholder="{{user.name}}" ng-repeat="user in ledgr.users">
       </label>
 
-      <input type="submit" class="button button-block button-positive" value="Add Entry">
+      <input type="submit" class="button button-block button-positive" value="Update Entry">
     </form>
   </ion-content>
 </ion-modal-view>

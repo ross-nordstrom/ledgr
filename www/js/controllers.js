@@ -125,9 +125,7 @@ function TimelineCtrl($scope, $state, $ionicModal, $filter, Ledgr) {
 
     if (!$scope.ledgr.users) return;
 
-
-    $scope.entry.paidBy = $scope.ledgr.users[$scope.appCtrl.user.$id];
-
+    $scope.entry.paidBy = $scope.appCtrl.user.$id;
     $scope.entry.beneficiaries = {};
     Object.keys($scope.ledgr.users).forEach(function (userId) {
       $scope.entry.beneficiaries[userId] = true;
@@ -136,22 +134,30 @@ function TimelineCtrl($scope, $state, $ionicModal, $filter, Ledgr) {
 
   $scope.removeEntry = function (entryIdx) {
     $scope.ledgr.entries.splice(entryIdx, 1);
+    updateTotals($scope.ledgr);
     return $scope.ledgr.$save();
   };
   $scope.addEntry = function (entry) {
     entry = angular.copy(entry);
-    entry.paidBy = JSON.parse(entry.paidBy);
-    entry.beneficiaries[entry.paidBy.id] = entry.paidBy.id;
-    entry.time = entry.time.valueOf();
-
-    Object.keys(entry.beneficiaries).forEach(function (userId) {
-      entry.beneficiaries[userId] = $scope.ledgr.users[userId];
-    });
+    decodeEntry(entry);
 
     $scope.ledgr.entries = $scope.ledgr.entries || [];
     $scope.ledgr.entries.push(entry);
     $scope.ledgr.entries = $filter('orderBy')($scope.ledgr.entries, '-time');
 
+    updateTotals($scope.ledgr);
+    resetEntry();
+    return $scope.ledgr.$save();
+  };
+  $scope.editEntry = function (entry) {
+    $scope.entry = entry;
+    encodeEntry(entry);
+    return $scope.openEditModal();
+  };
+  $scope.updateEntry = function (entry) {
+    decodeEntry(entry);
+
+    $scope.ledgr.entries = $filter('orderBy')($scope.ledgr.entries, '-time');
     updateTotals($scope.ledgr);
     resetEntry();
     return $scope.ledgr.$save();
@@ -171,8 +177,40 @@ function TimelineCtrl($scope, $state, $ionicModal, $filter, Ledgr) {
     $scope.modal.hide();
   };
 
+  $ionicModal.fromTemplateUrl('templates/ledgr/entry-edit-modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function (modal) {
+    $scope.editModal = modal;
+  });
+
+  $scope.openEditModal = function () {
+    return $scope.editModal.show();
+  };
+  $scope.closeEditModal = function () {
+    $scope.editModal.hide();
+  };
 
   resetEntry();
+
+
+  function encodeEntry(entry) {
+    entry.time = new Date(entry.time);
+    entry.paidBy = $scope.ledgr.users[entry.paidBy || $scope.appCtrl.user.$id];
+    Object.keys(entry.beneficiaries).forEach(function (userId) {
+      entry.beneficiaries[userId] = true;
+    });
+  }
+
+  function decodeEntry(entry) {
+    entry.paidBy = $scope.ledgr.users[entry.paidBy];
+    entry.beneficiaries[entry.paidBy.id] = entry.paidBy.id;
+    entry.time = entry.time.valueOf();
+
+    Object.keys(entry.beneficiaries).forEach(function (userId) {
+      entry.beneficiaries[userId] = $scope.ledgr.users[userId];
+    });
+  }
 
   //Cleanup the modal when we're done with it!
   $scope.$on('$destroy', function () {
