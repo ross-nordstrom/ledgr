@@ -62,17 +62,29 @@ function ApplicationConfig($stateProvider, $urlRouterProvider) {
     })
 
     // setup an abstract state for the tabs directive
-    .state('tab', {
-      url: '/tab',
+    .state('app', {
+      url: '/app',
       abstract: true,
-      templateUrl: 'templates/tabs.html',
+      templateUrl: 'templates/app.html',
       controller: 'AppCtrl as appCtrl',
       resolve: {
         authData: AuthDataResolver
       }
     })
+
+    .state('app.tab', {
+      url: '/tab',
+      abstract: true,
+      templateUrl: 'templates/tabs.html',
+      views: {
+        'app': {
+          templateUrl: 'templates/tabs.html',
+          controller: 'TabCtrl'
+        }
+      }
+    })
     // Each tab has its own nav history stack:
-    .state('tab.ledgrs', {
+    .state('app.tab.ledgrs', {
       url: '/ledgrs',
       views: {
         'tab-ledgrs': {
@@ -81,7 +93,7 @@ function ApplicationConfig($stateProvider, $urlRouterProvider) {
         }
       }
     })
-    .state('tab.friends', {
+    .state('app.tab.friends', {
       url: '/friends',
       views: {
         'tab-friends': {
@@ -90,7 +102,7 @@ function ApplicationConfig($stateProvider, $urlRouterProvider) {
         }
       }
     })
-    .state('tab.account', {
+    .state('app.tab.account', {
       url: '/account',
       views: {
         'tab-account': {
@@ -100,16 +112,20 @@ function ApplicationConfig($stateProvider, $urlRouterProvider) {
       }
     })
 
-    .state('ledgr', {
+    .state('app.ledgr', {
       url: '/ledgrs/:ledgrId',
       abstract: true,
-      templateUrl: 'templates/ledgr/tabs.html',
-      controller: 'LedgrCtrl as ldgrCtrl',
+      views: {
+        app: {
+          templateUrl: 'templates/ledgr/tabs.html',
+          controller: 'LedgrCtrl as ldgrCtrl',
+        }
+      },
       resolve: {
         authData: AuthDataResolver
       }
     })
-    .state('ledgr.main', {
+    .state('app.ledgr.main', {
       url: '',
       views: {
         'tab-main': {
@@ -118,7 +134,7 @@ function ApplicationConfig($stateProvider, $urlRouterProvider) {
         }
       }
     })
-    .state('ledgr.users', {
+    .state('app.ledgr.users', {
       url: '/users',
       views: {
         'tab-users': {
@@ -127,7 +143,7 @@ function ApplicationConfig($stateProvider, $urlRouterProvider) {
         }
       }
     })
-    .state('ledgr.detail', {
+    .state('app.ledgr.detail', {
       url: '/details',
       views: {
         'tab-details': {

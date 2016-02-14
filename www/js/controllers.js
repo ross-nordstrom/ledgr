@@ -3,6 +3,7 @@ angular.module('starter.controllers', ['firebase'])
   .controller('LoginCtrl', LoginCtrl)
 
   .controller('AppCtrl', AppCtrl)
+  .controller('TabCtrl', TabCtrl)
   .controller('LedgrsCtrl', LedgrsCtrl)
   .controller('FriendsCtrl', FriendsCtrl)
   .controller('AccountCtrl', AccountCtrl)
@@ -19,7 +20,7 @@ function LoginCtrl(Auth, User, $state) {
     Auth.$authWithOAuthPopup('google')
       .then(function (authData) {
         User.create(authData);
-        $state.go('tab.ledgrs');
+        $state.go('app.tab.ledgrs');
       });
   };
 
@@ -30,6 +31,10 @@ function AppCtrl($scope, authData, User) {
   this.user = User.get(authData.uid);
 }
 AppCtrl.$inject = ['$scope', 'authData', 'User'];
+
+function TabCtrl() {
+}
+TabCtrl.$inject = [];
 
 function LedgrsCtrl($scope, Ledgrs) {
   $scope.ledgrs = Ledgrs.all();
@@ -134,6 +139,29 @@ function TimelineCtrl($scope, $state, $ionicModal, Ledgr) {
 TimelineCtrl.$inject = ['$scope', '$state', '$ionicModal', 'Ledgr'];
 
 function UsersCtrl($scope, User) {
+  $scope.candidates = angular.copy($scope.appCtrl.user.friends);
+
+  if ($scope.ldgrCtrl.ledgr.users) {
+    Object.keys($scope.ldgrCtrl.ledgr.users).forEach(function (userId) {
+      delete $scope.candidates[userId];
+    });
+  }
+
+  $scope.removeParticipant = function (friendId) {
+    delete $scope.ldgrCtrl.ledgr.users[friendId];
+
+    $scope.candidates[friendId] = $scope.appCtrl.user.friends[friendId];
+
+    return $scope.ldgrCtrl.ledgr.$save();
+  };
+  $scope.addParticipant = function (userId, user) {
+    $scope.ldgrCtrl.ledgr.users = $scope.ldgrCtrl.ledgr.users || {};
+    $scope.ldgrCtrl.ledgr.users[userId] = user;
+
+    delete $scope.candidates[userId];
+
+    return $scope.ldgrCtrl.ledgr.$save();
+  }
 }
 UsersCtrl.$inject = ['$scope', 'User'];
 

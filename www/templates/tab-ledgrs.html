@@ -2,7 +2,7 @@
   <ion-content>
     <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="ledgr in ledgrs"
-                type="item-text-wrap" href="#/ledgrs/{{ledgr.$id}}">
+                type="item-text-wrap" ui-sref="app.ledgr.main({ledgrId: ledgr.$id})">
         <img ng-src="{{ledgr.pic}}">
 
         <h2>{{ledgr.name}}</h2>
