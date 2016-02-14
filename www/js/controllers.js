@@ -9,10 +9,8 @@ angular.module('starter.controllers', ['firebase'])
   .controller('LedgrCtrl', LedgrCtrl)
   .controller('TimelineCtrl', TimelineCtrl)
   .controller('UsersCtrl', UsersCtrl)
+  .controller('LedgrDetailsCtrl', LedgrDetailsCtrl)
 
-
-  .controller('ChatsCtrl', ChatsCtrl)
-  .controller('ChatDetailCtrl', ChatDetailCtrl);
 
 function LoginCtrl(Auth, User, $state) {
 
@@ -45,8 +43,15 @@ function LedgrsCtrl($scope, Ledgrs) {
 LedgrsCtrl.$inject = ['$scope', 'Ledgrs'];
 
 function LedgrCtrl($scope, $stateParams, Ledgr) {
-  $scope.ledgrId = $stateParams.ledgrId;
-  $scope.ledgr = Ledgr.construct($scope.ledgrId);
+  var ldgrCtrl = this;
+  this.ledgrId = $stateParams.ledgrId;
+  this.ledgr = Ledgr.construct(this.ledgrId);
+}
+LedgrCtrl.$inject = ['$scope', '$stateParams', 'Ledgr'];
+
+function LedgrDetailsCtrl($scope, Ledgr) {
+  $scope.ledgr = $scope.ldgrCtrl.ledgr;
+  $scope.edit = false;
 
   $scope.toggleEdit = function () {
     $scope.edit = !$scope.edit;
@@ -55,7 +60,7 @@ function LedgrCtrl($scope, $stateParams, Ledgr) {
     return $scope.ledgr.$save();
   }
 }
-LedgrCtrl.$inject = ['$scope', '$stateParams', 'Ledgr'];
+LedgrDetailsCtrl.$inject = ['$scope', 'Ledgr'];
 
 function TimelineCtrl($scope, $state, Ledgr) {
   $scope.ledgrId = $state.params.ledgrId;
@@ -78,17 +83,3 @@ function AccountCtrl($scope, authData, User) {
   $scope.user = User.get(authData.uid);
 }
 AccountCtrl.$inject = ['$scope', 'authData', 'User'];
-
-
-function ChatsCtrl($scope, Chats) {
-  $scope.chats = Chats.all();
-  $scope.remove = function (chat) {
-    Chats.remove(chat);
-  };
-}
-ChatsCtrl.$inject = ['$scope', 'Chats'];
-
-function ChatDetailCtrl($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-}
-ChatDetailCtrl.$inject = ['$scope', '$stateParams', 'Chats'];

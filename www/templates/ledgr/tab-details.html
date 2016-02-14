@@ -1,0 +1,43 @@
+<!--
+  This template loads for the 'tab.friend-detail' state (app.js)
+  'friend' is a $scope variable created in the FriendsCtrl controller (controllers.js)
+  The FriendsCtrl pulls data from the Friends service (service.js)
+  The Friends service returns an array of friend data
+-->
+<ion-view view-title="{{ledgr.name}}">
+  <ion-content>
+    <div ng-hide="edit">
+      <img ng-src="{{ledgr.pic}}" class="banner-image"></img>
+
+      <div class="padding">
+        <h1>
+          {{ledgr.name}}
+          <a class="button button-icon icon ion-settings" ng-click="toggleEdit()"></a>
+        </h1>
+
+        <h4>{{ledgr.brief}}</h4>
+      </div>
+    </div>
+
+    <div class="padding" ng-show="edit">
+      <div class="list list-inset">
+        <form ng-submit="save().then(toggleEdit)" ng-show="edit">
+          <label class="item item-input item-floating-label">
+            <span class="input-label">Ledgr name</span>
+            <input type="text" ng-model="ledgr.name" placeholder="Ledgr name">
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label">Brief summary</span>
+            <input type="text" ng-model="ledgr.brief" placeholder="A brief summary of the Ledgr">
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label">Picture URL</span>
+            <input type="url" ng-model="ledgr.pic" placeholder="Link to a picture">
+          </label>
+          <input type="submit" class="button button-block button-dark">
+        </form>
+      </div>
+    </div>
+
+  </ion-content>
+</ion-view>

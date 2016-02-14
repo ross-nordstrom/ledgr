@@ -1,0 +1,28 @@
+<!--
+Create tabs with an icon and label, using the tabs-positive style.
+Each tab's child <ion-nav-view> directive will have its own
+navigation history that also transitions its views in and out.
+-->
+<ion-tabs class="tabs-icon-top tabs-color-active-positive">
+
+
+  <!-- Participants Tab -->
+  <ion-tab title="Participants" icon-off="ion-ios-person-outline" icon-on="ion-ios-person"
+           href="#/ledgrs/{{ldgrCtrl.ledgr.$id}}/users">
+    <ion-nav-view name="tab-users"></ion-nav-view>
+  </ion-tab>
+
+  <!-- Timeline Tab -->
+  <ion-tab title="Timeline" icon-off="ion-ios-calendar-outline" icon-on="ion-ios-calendar"
+           href="#/ledgrs/{{ldgrCtrl.ledgr.$id}}">
+    <ion-nav-view name="tab-main"></ion-nav-view>
+  </ion-tab>
+
+  <!-- Details Tab -->
+  <ion-tab title="Details" icon-off="ion-ios-gear-outline" icon-on="ion-ios-gear"
+           href="#/ledgrs/{{ldgrCtrl.ledgr.$id}}/details">
+    <ion-nav-view name="tab-details"></ion-nav-view>
+  </ion-tab>
+
+
+</ion-tabs>

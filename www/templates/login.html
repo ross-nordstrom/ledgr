@@ -1,8 +1,21 @@
-<ion-view view-title="Login">
-  <ion-content>
+<ion-view view-title="Ledgr | Login">
+  <ion-content class="padding">
+    <h1>Welcome to Ledgr!</h1>
+
+    <p>
+      Ledgr is a minimalistic app for tracking expenses within a group.
+      It includes the ability to track who paid for items in a "Ledgr",
+      as well as who benefited from it.
+    </p>
+
+    <p>
+      As you track expenses, Ledgr will give you a real-time update about
+      how much each person owes (or is owed).
+    </p>
+
     <div class="padding">
-      <button class="button button-block button-assertive" ng-click="ctrl.loginWithGoogle()">
-        Google
+      <button class="button button-block button-dark" ng-click="ctrl.loginWithGoogle()">
+        Login with Google
       </button>
     </div>
   </ion-content>

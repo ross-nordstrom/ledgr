@@ -79,21 +79,49 @@ function ApplicationConfig($stateProvider, $urlRouterProvider) {
         }
       }
     })
-    .state('tab.ledgr-detail', {
-      url: '/ledgrs/:ledgrId',
-      views: {
-        'tab-ledgrs': {
-          templateUrl: 'templates/ledgr-detail.html',
-          controller: 'LedgrCtrl'
-        }
-      }
-    })
     .state('tab.account', {
       url: '/account',
       views: {
         'tab-account': {
           templateUrl: 'templates/tab-account.html',
           controller: 'AccountCtrl'
+        }
+      }
+    })
+
+    .state('ledgr', {
+      url: '/ledgrs/:ledgrId',
+      abstract: true,
+      templateUrl: 'templates/ledgr/tabs.html',
+      controller: 'LedgrCtrl as ldgrCtrl',
+      //resolve: {
+      //  ledgr: LedgrDataResolver
+      //}
+    })
+    .state('ledgr.main', {
+      url: '',
+      views: {
+        'tab-main': {
+          templateUrl: 'templates/ledgr/tab-main.html',
+          controller: 'TimelineCtrl'
+        }
+      }
+    })
+    .state('ledgr.users', {
+      url: '/users',
+      views: {
+        'tab-users': {
+          templateUrl: 'templates/ledgr/tab-users.html',
+          controller: 'UsersCtrl'
+        }
+      }
+    })
+    .state('ledgr.detail', {
+      url: '/details',
+      views: {
+        'tab-details': {
+          templateUrl: 'templates/ledgr/tab-details.html',
+          controller: 'LedgrDetailsCtrl'
         }
       }
     })

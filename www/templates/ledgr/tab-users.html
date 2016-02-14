@@ -1,0 +1,38 @@
+<ion-view view-title="Dashboard">
+  <ion-content class="padding">
+
+    <div class="list card">
+      <div class="item item-divider">Your Ledgrs</div>
+      <div class="item item-body">
+        <div>
+          Ledgrs help you manage the book-keeping for payments made by people in a group.
+        </div>
+        <div>
+          Ledgr will help you figure out who owes what throughout the trip, helping everyone square up.
+        </div>
+      </div>
+    </div>
+
+    <div class="list card">
+      <div class="item item-divider">Ledgrs</div>
+      <div class="item item-body">
+        <div ng-repeat="ledgr in ledgrs">
+          <h2>
+            {{ledgr.name}}
+            <button class="button icon ion-trash-b" ng-click="remove(ledgr)"></button>
+          </h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="list card">
+      <div class="item item-divider">New Ledgr</div>
+      <div class="item item-body">
+        <form ng-submit="create(ledgr)">
+          <input type="text" ng-model="ledgr.name" placeholder="Name of the new Ledgr">
+          <input type="submit">
+        </form>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
