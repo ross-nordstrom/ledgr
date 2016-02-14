@@ -107,7 +107,7 @@ function LedgrDetailsCtrl($scope, Ledgr) {
 }
 LedgrDetailsCtrl.$inject = ['$scope', 'Ledgr'];
 
-function TimelineCtrl($scope, $state, $ionicModal, Ledgr) {
+function TimelineCtrl($scope, $state, $ionicModal, $filter, Ledgr) {
   $scope.ledgrId = $state.params.ledgrId;
   $scope.ledgr = Ledgr.construct($scope.ledgrId);
   angular.extend($scope, $scope.ledgr); // Copy the Ledgr service's API onto scope
@@ -135,7 +135,7 @@ function TimelineCtrl($scope, $state, $ionicModal, Ledgr) {
   }
 
   $scope.removeEntry = function (entryIdx) {
-    $scope.ledgr.entries.splice(entryIdx);
+    $scope.ledgr.entries.splice(entryIdx, 1);
     return $scope.ledgr.$save();
   };
   $scope.addEntry = function (entry) {
@@ -150,9 +150,7 @@ function TimelineCtrl($scope, $state, $ionicModal, Ledgr) {
 
     $scope.ledgr.entries = $scope.ledgr.entries || [];
     $scope.ledgr.entries.push(entry);
-    $scope.ledgr.entries.sort(function (a, b) {
-      return a.time < b.time;
-    });
+    $scope.ledgr.entries = $filter('orderBy')($scope.ledgr.entries, '-time');
 
     updateTotals($scope.ledgr);
     resetEntry();
@@ -181,7 +179,7 @@ function TimelineCtrl($scope, $state, $ionicModal, Ledgr) {
     $scope.modal.remove();
   });
 }
-TimelineCtrl.$inject = ['$scope', '$state', '$ionicModal', 'Ledgr'];
+TimelineCtrl.$inject = ['$scope', '$state', '$ionicModal', '$filter', 'Ledgr'];
 
 function UsersCtrl($scope, User) {
   $scope.candidates = angular.copy($scope.appCtrl.user.friends);
@@ -226,19 +224,23 @@ function AccountCtrl($scope, User) {
 AccountCtrl.$inject = ['$scope', 'User'];
 
 function updateTotals(ledgr) {
+  var debts = {};
+  Object.keys(ledgr.users).forEach(function (userId) {
+    debts[userId] = 0;
+  });
+
   var info = ledgr.entries.reduce(function (acc, entry) {
     acc.total += entry.price;
 
-    var perPerson = acc.total / (Object.keys(entry.beneficiaries).length);
-    acc.debts[entry.paidBy.id] = (acc.debts[entry.paidBy.id] || 0) - entry.price;
+    var perPerson = entry.price / (Object.keys(entry.beneficiaries).length);
+    acc.debts[entry.paidBy.id] = acc.debts[entry.paidBy.id] - entry.price;
 
-    Object.keys(entry.beneficiaries).forEach(function (person) {
-      var personId = person.id;
-      acc.debts[personId] = (acc.debts[personId] || 0) + perPerson;
+    Object.keys(entry.beneficiaries).forEach(function (personId) {
+      acc.debts[personId] = acc.debts[personId] + perPerson;
     });
 
     return acc;
-  }, {total: 0, debts: {}});
+  }, {total: 0, debts: debts});
 
   return angular.extend(ledgr, info);
 }

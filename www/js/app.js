@@ -143,7 +143,7 @@ function ApplicationConfig($stateProvider, $urlRouterProvider) {
         }
       }
     })
-    .state('app.ledgr.detail', {
+    .state('app.ledgr.details', {
       url: '/details',
       views: {
         'tab-details': {
