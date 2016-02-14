@@ -80,6 +80,9 @@ function User(usersRef, userSearchRef, $firebaseObject, Firebase) {
 
     var userRef = new Firebase(usersRef.toString() + '/' + userId);
     return $firebaseObject(userRef);
-  }
+  };
+  this.search = function (name) {
+    return usersByName[name];
+  };
 }
 User.$inject = ['usersRef', 'userSearchRef', '$firebaseObject', 'Firebase'];

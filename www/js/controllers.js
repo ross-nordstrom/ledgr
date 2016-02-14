@@ -4,6 +4,7 @@ angular.module('starter.controllers', ['firebase'])
 
   .controller('AppCtrl', AppCtrl)
   .controller('LedgrsCtrl', LedgrsCtrl)
+  .controller('FriendsCtrl', FriendsCtrl)
   .controller('AccountCtrl', AccountCtrl)
 
   .controller('LedgrCtrl', LedgrCtrl)
@@ -25,9 +26,10 @@ function LoginCtrl(Auth, User, $state) {
 }
 LoginCtrl.$inject = ['Auth', 'User', '$state'];
 
-function AppCtrl($scope, FirebaseUrl, $firebaseArray) {
+function AppCtrl($scope, authData, User) {
+  this.user = User.get(authData.uid);
 }
-AppCtrl.$inject = ['$scope', 'FirebaseUrl', '$firebaseArray'];
+AppCtrl.$inject = ['$scope', 'authData', 'User'];
 
 function LedgrsCtrl($scope, Ledgrs) {
   $scope.ledgrs = Ledgrs.all();
@@ -41,6 +43,27 @@ function LedgrsCtrl($scope, Ledgrs) {
   }
 }
 LedgrsCtrl.$inject = ['$scope', 'Ledgrs'];
+
+function FriendsCtrl($scope, User) {
+  $scope.user = $scope.appCtrl.user;
+  $scope.user.friends = $scope.user.friends || {};
+  $scope.friends = $scope.user.friends;
+
+  $scope.searchResults = [];
+
+  $scope.searchUsers = function (name) {
+    $scope.searchResults = User.search(name);
+  };
+  $scope.addFriend = function (friendId, friendInfo) {
+    $scope.user.friends[friendId] = friendInfo;
+
+    //TODO: add self to friend's friendRequest list
+    //var friend = User.get(friendId);
+
+    return $scope.user.$save();
+  }
+}
+FriendsCtrl.$inject = ['$scope', 'User'];
 
 function LedgrCtrl($scope, $stateParams, Ledgr) {
   var ldgrCtrl = this;
@@ -76,10 +99,10 @@ function UsersCtrl($scope, User) {
 }
 UsersCtrl.$inject = ['$scope', 'User'];
 
-function AccountCtrl($scope, authData, User) {
+function AccountCtrl($scope, User) {
   $scope.settings = {
     enableFriends: true
   };
-  $scope.user = User.get(authData.uid);
+  $scope.user = $scope.appCtrl.user;
 }
-AccountCtrl.$inject = ['$scope', 'authData', 'User'];
+AccountCtrl.$inject = ['$scope', 'User'];
