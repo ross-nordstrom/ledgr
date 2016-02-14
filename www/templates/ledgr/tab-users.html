@@ -7,6 +7,8 @@
 
         <h2>{{user.name}}</h2>
 
+        <p>Debt: ${{ldgrCtrl.ledgr.debts[user.id]}}</p>
+
         <!--<i class="icon ion-chevron-right icon-accessory"></i>-->
 
         <ion-option-button class="button-assertive" ng-click="removeParticipant(user.id)">

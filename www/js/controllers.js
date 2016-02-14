@@ -113,7 +113,14 @@ function TimelineCtrl($scope, $state, $ionicModal, Ledgr) {
   angular.extend($scope, $scope.ledgr); // Copy the Ledgr service's API onto scope
 
   $scope.addEntry = function (entry) {
+    entry.beneficiaries[entry.paidBy] = true;
 
+    $scope.ledgr.entries = $scope.ledgr.entries || [];
+    $scope.ledgr.entries.push(entry);
+
+    updateTotals($scope.ledgr);
+
+    $scope.ledgr.$save();
   };
 
   $ionicModal.fromTemplateUrl('templates/ledgr/entry-modal.html', {
@@ -172,3 +179,20 @@ function AccountCtrl($scope, User) {
   $scope.user = $scope.appCtrl.user;
 }
 AccountCtrl.$inject = ['$scope', 'User'];
+
+function updateTotals(ledgr) {
+  var info = ledgr.entries.reduce(function (acc, entry) {
+    acc.total += entry.price;
+
+    var perPerson = acc.total / (Object.keys(entry.beneficiaries).length);
+    acc.debts[entry.paidBy] = (acc.debts[entry.paidBy] || 0) - entry.price;
+
+    Object.keys(entry.beneficiaries).forEach(function (personId) {
+      acc.debts[personId] = (acc.debts[personId] || 0) + perPerson;
+    });
+
+    return acc;
+  }, {total: 0, debts: {}});
+
+  return angular.extend(ledgr, info);
+}

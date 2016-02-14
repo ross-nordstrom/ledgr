@@ -3,20 +3,39 @@
     <h1 class="title">New Ledgr Entry</h1>
   </ion-header-bar>
   <ion-content>
-    <form ng-submit="addEntry(entry).then(closeModal)">
-      <input type="number" min="0" step="any" ng-model="entry.price" placeholder="Amount (e.g. $1.23)">
-      <input type="text" ng-model="entry.description" placeholder="Description">
+    <form class="list" ng-submit="addEntry(entry).then(closeModal)">
+      <label class="item item-input">
+        <input required type="number" min="0" step="any" ng-model="entry.price" placeholder="Amount (e.g. $1.23)">
+      </label>
+      <label class="item item-input">
+        <input required type="date" ng-model="entry.date" placeholder="Date of purchase">
+      </label>
+      <label class="item item-input">
+        <input required type="text" ng-model="entry.description" placeholder="Description">
+      </label>
 
       <label class="item item-input item-select">
         <div class="input-label">
           Paid by
         </div>
-        <select ng-model="entryPaidBy">
-          <option ng-repeat="friend in ldgrCtrl.ledgr.friends">{{friend.name}}</option>
+        <select ng-model="entry.paidBy">
+          <option required ng-repeat="user in ledgr.users" value="{{user.id}}">{{user.name}}</option>
         </select>
       </label>
 
+      <ion-list>
+        <ion-checkbox ng-model="entry.beneficiaries[user.id]"
+                      ng-repeat="user in ledgr.users"
+                      ng-hide="user.id === entry.paidBy">
+          {{user.name}}
+        </ion-checkbox>
+      </ion-list>
+      <label class="item item-input">
+        <input type="checkbox" placeholder="{{user.name}}"
+               ng-repeat="user in ledgr.users" ng-hide="user.id === entryPaidBy">
+      </label>
 
+      <input type="submit" class="button button-block button-positive" value="Add Entry">
     </form>
   </ion-content>
 </ion-modal-view>
