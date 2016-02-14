@@ -19,7 +19,7 @@
 
           <h2>${{entry.price}} &nbsp;&nbsp; {{entry.description}}</h2>
 
-          <p>Beneficiaries:&nbsp; <span ng-repeat="user in entry.beneficiaries">{{user.name}}&nbsp; </span></p>
+          <p><span ng-repeat="user in entry.beneficiaries">{{user.name.split(' ')[0]}}&nbsp; </span></p>
 
           <div class="item-note">{{entry.time | date:'M/d h:mm a'}}</div>
 
