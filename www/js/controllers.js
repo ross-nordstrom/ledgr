@@ -47,7 +47,6 @@ LedgrsCtrl.$inject = ['$scope', 'Ledgrs'];
 function FriendsCtrl($scope, User) {
   $scope.user = $scope.appCtrl.user;
   $scope.user.friends = $scope.user.friends || {};
-  $scope.friends = $scope.user.friends;
 
   $scope.searchResults = [];
 
@@ -55,6 +54,7 @@ function FriendsCtrl($scope, User) {
     $scope.searchResults = User.search(name);
   };
   $scope.addFriend = function (friendId, friendInfo) {
+    $scope.user.friends = $scope.user.friends || {};
     $scope.user.friends[friendId] = friendInfo;
 
     //TODO: add self to friend's friendRequest list

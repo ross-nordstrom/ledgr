@@ -68,8 +68,9 @@ function User(usersRef, userSearchRef, $firebaseObject, Firebase) {
 
         var nameParts = savedUser.google.displayName.split(' ');
         nameParts.forEach(function (namePart) {
-          usersByName[namePart] = !usersByName[namePart] ? {} : usersByName[namePart];
-          usersByName[namePart][user.uid] = userInfo;
+          var name = namePart.toLowerCase();
+          usersByName[name] = !usersByName[name] ? {} : usersByName[name];
+          usersByName[name][user.uid] = userInfo;
         });
 
         return usersByName.$save();
@@ -82,7 +83,7 @@ function User(usersRef, userSearchRef, $firebaseObject, Firebase) {
     return $firebaseObject(userRef);
   };
   this.search = function (name) {
-    return usersByName[name];
+    return usersByName[name.toLowerCase()];
   };
 }
 User.$inject = ['usersRef', 'userSearchRef', '$firebaseObject', 'Firebase'];
