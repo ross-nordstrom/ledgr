@@ -19,14 +19,16 @@
       <div class="item item-divider item-dark">Add Friend</div>
       <div class="item item-body">
         <form ng-submit="searchUsers(searchName)" class="item item-input-inset">
-          <input type="text" autofocus ng-model="searchName" class="item-input-wrapper"
+          <input type="text" autofocus ng-model="searchName" ng-change="searching()"
+                 class="item-input-wrapper"
                  placeholder="Friend's name">
           <input type="submit" class="button button-small button-dark">
         </form>
 
+        <div ng-hide="searchResults.length || !searched">No matching results</div>
         <ion-list>
           <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="person in searchResults"
-                    type="item-text-wrap" ng-click="addFriend(person.id, person)" ng-hide="person.id === user.$id">
+                    type="item-text-wrap" ng-click="addFriend(person.id, person)">
             <img ng-src="{{person.pic}}">
 
             <h2>{{person.name}}</h2>

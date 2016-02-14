@@ -83,7 +83,13 @@ function User(usersRef, userSearchRef, $firebaseObject, Firebase) {
     return $firebaseObject(userRef);
   };
   this.search = function (name) {
-    return usersByName[name.toLowerCase()];
+    if (!name || angular.equals({}, name))return {};
+    
+    var matches = {};
+    name.split(' ').forEach(function (nm) {
+      angular.extend(matches, usersByName[nm.trim().toLowerCase()]);
+    });
+    return matches;
   };
 }
 User.$inject = ['usersRef', 'userSearchRef', '$firebaseObject', 'Firebase'];

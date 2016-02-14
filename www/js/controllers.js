@@ -49,9 +49,21 @@ function FriendsCtrl($scope, User) {
   $scope.user.friends = $scope.user.friends || {};
 
   $scope.searchResults = [];
+  $scope.searched = false;
 
+  $scope.searching = function () {
+    $scope.searched = false;
+  };
   $scope.searchUsers = function (name) {
-    $scope.searchResults = User.search(name);
+    $scope.searched = true;
+    var results = User.search(name);
+    delete results[$scope.user.$id];
+    if ($scope.user && $scope.user.friends) {
+      Object.keys($scope.user.friends).forEach(function (friendId) {
+        delete results[friendId];
+      });
+    }
+    $scope.searchResults = results;
   };
   $scope.removeFriend = function (friendId) {
     delete $scope.user.friends[friendId];
