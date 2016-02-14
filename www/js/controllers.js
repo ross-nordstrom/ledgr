@@ -113,11 +113,25 @@ function TimelineCtrl($scope, $state, $ionicModal, Ledgr) {
   angular.extend($scope, $scope.ledgr); // Copy the Ledgr service's API onto scope
 
 
+  $scope.ledgr.$loaded().then(function () {
+    resetEntry();
+  });
+
   function resetEntry() {
     $scope.entry = {};
     var now = new Date();
     var rounded = now - now % 60000;
     $scope.entry.time = new Date(rounded);
+
+    if (!$scope.ledgr.users) return;
+
+
+    $scope.entry.paidBy = $scope.ledgr.users[$scope.appCtrl.user.$id];
+
+    $scope.entry.beneficiaries = {};
+    Object.keys($scope.ledgr.users).forEach(function (userId) {
+      $scope.entry.beneficiaries[userId] = true;
+    })
   }
 
   $scope.removeEntry = function (entryIdx) {
@@ -125,8 +139,14 @@ function TimelineCtrl($scope, $state, $ionicModal, Ledgr) {
     return $scope.ledgr.$save();
   };
   $scope.addEntry = function (entry) {
+    entry = angular.copy(entry);
     entry.paidBy = JSON.parse(entry.paidBy);
-    entry.beneficiaries[entry.paidBy.id] = true;
+    entry.beneficiaries[entry.paidBy.id] = entry.paidBy.id;
+    entry.time = entry.time.valueOf();
+
+    Object.keys(entry.beneficiaries).forEach(function (userId) {
+      entry.beneficiaries[userId] = $scope.ledgr.users[userId];
+    });
 
     $scope.ledgr.entries = $scope.ledgr.entries || [];
     $scope.ledgr.entries.push(entry);
@@ -135,7 +155,6 @@ function TimelineCtrl($scope, $state, $ionicModal, Ledgr) {
     });
 
     updateTotals($scope.ledgr);
-
     resetEntry();
     return $scope.ledgr.$save();
   };
@@ -167,11 +186,18 @@ TimelineCtrl.$inject = ['$scope', '$state', '$ionicModal', 'Ledgr'];
 function UsersCtrl($scope, User) {
   $scope.candidates = angular.copy($scope.appCtrl.user.friends);
 
-  if ($scope.ldgrCtrl.ledgr.users) {
-    Object.keys($scope.ldgrCtrl.ledgr.users).forEach(function (userId) {
-      delete $scope.candidates[userId];
-    });
-  }
+  if (!$scope.ldgrCtrl.ledgr.users) $scope.ldgrCtrl.ledgr.users = {};
+
+  Object.keys($scope.ldgrCtrl.ledgr.users).forEach(function (userId) {
+    delete $scope.candidates[userId];
+  });
+
+  $scope.ldgrCtrl.ledgr.users[$scope.appCtrl.user.$id] = {
+    id: $scope.appCtrl.user.$id,
+    name: $scope.appCtrl.user.google.displayName,
+    pic: $scope.appCtrl.user.google.profileImageURL
+  };
+
 
   $scope.removeParticipant = function (friendId) {
     delete $scope.ldgrCtrl.ledgr.users[friendId];
@@ -206,7 +232,8 @@ function updateTotals(ledgr) {
     var perPerson = acc.total / (Object.keys(entry.beneficiaries).length);
     acc.debts[entry.paidBy.id] = (acc.debts[entry.paidBy.id] || 0) - entry.price;
 
-    Object.keys(entry.beneficiaries).forEach(function (personId) {
+    Object.keys(entry.beneficiaries).forEach(function (person) {
+      var personId = person.id;
       acc.debts[personId] = (acc.debts[personId] || 0) + perPerson;
     });
 

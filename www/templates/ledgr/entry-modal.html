@@ -26,14 +26,12 @@
 
       <ion-list>
         <ion-checkbox ng-model="entry.beneficiaries[user.id]"
-                      ng-repeat="user in ledgr.users"
-                      ng-hide="user.id === entry.paidBy.id">
+                      ng-repeat="user in ledgr.users">
           {{user.name}}
         </ion-checkbox>
       </ion-list>
       <label class="item item-input">
-        <input type="checkbox" placeholder="{{user.name}}"
-               ng-repeat="user in ledgr.users" ng-hide="user.id === entryPaidBy">
+        <input type="checkbox" placeholder="{{user.name}}" ng-repeat="user in ledgr.users">
       </label>
 
       <input type="submit" class="button button-block button-positive" value="Add Entry">

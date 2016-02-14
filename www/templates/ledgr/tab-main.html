@@ -18,7 +18,11 @@
 
           <h2>${{entry.price}} &nbsp;&nbsp; {{entry.description}}</h2>
 
-          <p>{{entry.beneficiaries.length}} beneficiaries</p>
+          <p>Beneficiaries:&nbsp; <span ng-repeat="user in entry.beneficiaries">{{user.name}}&nbsp; </span></p>
+
+          <div class="item-note">
+            Time: {{entry.time | date:'M/d h a'}}
+          </div>
 
           <ion-option-button class="button-assertive" ng-click="removeEntry($index)">
             Delete
