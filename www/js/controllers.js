@@ -196,7 +196,7 @@ function TimelineCtrl($scope, $state, $ionicModal, $filter, Ledgr) {
 
   function encodeEntry(entry) {
     entry.time = new Date(entry.time);
-    entry.paidBy = $scope.ledgr.users[entry.paidBy || $scope.appCtrl.user.$id];
+    entry.paidBy = entry.paidBy.id || $scope.appCtrl.user.$id;
     Object.keys(entry.beneficiaries).forEach(function (userId) {
       entry.beneficiaries[userId] = true;
     });

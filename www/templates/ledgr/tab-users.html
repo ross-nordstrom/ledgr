@@ -11,7 +11,7 @@
 
         <p>
           Debt:
-          <span style="color:{{ldgrCtrl.ledgr.debts[user.id] > 0 ? 'darkred;font-weight:bold' : 'darkgreen'}};">
+          <span class="debt" ng-class="{'in-debt': ldgrCtrl.ledgr.debts[user.id]>0}">
             {{ldgrCtrl.ledgr.debts[user.id] | currency}}
           </span>
         </p>

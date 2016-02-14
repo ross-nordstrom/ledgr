@@ -6,3 +6,13 @@
   background-position: center center, top top;
   background-repeat: no-repeat;
 }
+
+.debt {
+  color: darkgreen;
+}
+
+.in-debt {
+  color: darkred;
+  font-weight: bold;
+}
+

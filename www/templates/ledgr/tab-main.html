@@ -2,7 +2,8 @@
   <div class="bar bar-subheader bar-stable">
     <h2 class="title">
       Total: {{ledgr.total | currency}};
-      You Owe: {{ledgr.debts[appCtrl.user.$id] | currency}}
+      You Owe: <span class="debt" ng-class="{'in-debt': ledgr.debts[appCtrl.user.$id]>0}">{{ledgr.debts[appCtrl.user.$id] |
+      currency}}</span>
     </h2>
   </div>
 
