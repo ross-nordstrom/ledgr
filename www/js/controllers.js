@@ -19,7 +19,7 @@ function LoginCtrl(Auth, User, $state) {
     Auth.$authWithOAuthPopup('google')
       .then(function (authData) {
         User.create(authData);
-        $state.go('tab.ledgrs');
+        $state.go('app.tab.ledgrs');
       });
   };
 
@@ -83,8 +83,8 @@ FriendsCtrl.$inject = ['$scope', 'User'];
 
 function LedgrCtrl($scope, $stateParams, Ledgr) {
   var ldgrCtrl = this;
-  this.ledgrId = $stateParams.ledgrId;
-  this.ledgr = Ledgr.construct(this.ledgrId);
+  ldgrCtrl.ledgrId = $stateParams.ledgrId;
+  ldgrCtrl.ledgr = Ledgr.construct(ldgrCtrl.ledgrId);
 }
 LedgrCtrl.$inject = ['$scope', '$stateParams', 'Ledgr'];
 
@@ -101,17 +101,38 @@ function LedgrDetailsCtrl($scope, Ledgr) {
 }
 LedgrDetailsCtrl.$inject = ['$scope', 'Ledgr'];
 
-function TimelineCtrl($scope, $state, Ledgr) {
+function TimelineCtrl($scope, $state, $ionicModal, Ledgr) {
   $scope.ledgrId = $state.params.ledgrId;
   $scope.ledgr = Ledgr.construct($scope.ledgrId);
   angular.extend($scope, $scope.ledgr); // Copy the Ledgr service's API onto scope
 
+  $scope.addEntry = function (entry) {
+
+  }
+
+  $ionicModal.fromTemplateUrl('templates/ledgr/entry-modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function (modal) {
+    $scope.modal = modal;
+  });
+
+  $scope.openModal = function () {
+    return $scope.modal.show();
+  };
+  $scope.closeModal = function () {
+    $scope.modal.hide();
+  };
+
+
+  //Cleanup the modal when we're done with it!
+  $scope.$on('$destroy', function () {
+    $scope.modal.remove();
+  });
 }
-TimelineCtrl.$inject = ['$scope', '$state', 'Ledgr'];
+TimelineCtrl.$inject = ['$scope', '$state', '$ionicModal', 'Ledgr'];
 
 function UsersCtrl($scope, User) {
-  $scope.users = User.all();
-  angular.extend($scope, User); // Copy the User service's API onto scope
 }
 UsersCtrl.$inject = ['$scope', 'User'];
 

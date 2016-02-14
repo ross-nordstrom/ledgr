@@ -1,37 +1,33 @@
 <ion-view view-title="Dashboard">
   <ion-content class="padding">
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="user in ldgrCtrl.ledgr.users"
+                type="item-text-wrap"><!--href="#/users/{{user.$id}}"-->
+        <img ng-src="{{user.pic}}">
+
+        <h2>{{user.name}}</h2>
+
+        <!--<i class="icon ion-chevron-right icon-accessory"></i>-->
+
+        <ion-option-button class="button-assertive" ng-click="removeFriend(user.id)">
+          Remove from Ledgr
+        </ion-option-button>
+      </ion-item>
+    </ion-list>
 
     <div class="list card">
-      <div class="item item-divider">Your Ledgrs</div>
+      <div class="item item-divider item-dark">Add Participant</div>
       <div class="item item-body">
-        <div>
-          Ledgrs help you manage the book-keeping for payments made by people in a group.
-        </div>
-        <div>
-          Ledgr will help you figure out who owes what throughout the trip, helping everyone square up.
-        </div>
-      </div>
-    </div>
+        <ion-list>
+          <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="person in appCtrl.user.friends"
+                    type="item-text-wrap" ng-click="addFriend(person.id, person)">
+            <img ng-src="{{person.pic}}">
 
-    <div class="list card">
-      <div class="item item-divider">Ledgrs</div>
-      <div class="item item-body">
-        <div ng-repeat="ledgr in ledgrs">
-          <h2>
-            {{ledgr.name}}
-            <button class="button icon ion-trash-b" ng-click="remove(ledgr)"></button>
-          </h2>
-        </div>
-      </div>
-    </div>
+            <h2>{{person.name}}</h2>
 
-    <div class="list card">
-      <div class="item item-divider">New Ledgr</div>
-      <div class="item item-body">
-        <form ng-submit="create(ledgr)">
-          <input type="text" ng-model="ledgr.name" placeholder="Name of the new Ledgr">
-          <input type="submit">
-        </form>
+            <i class="icon ion-plus"></i>
+          </ion-item>
+        </ion-list>
       </div>
     </div>
   </ion-content>

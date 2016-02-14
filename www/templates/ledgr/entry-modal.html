@@ -1,0 +1,22 @@
+<ion-modal-view>
+  <ion-header-bar class="bar-positive">
+    <h1 class="title">New Ledgr Entry</h1>
+  </ion-header-bar>
+  <ion-content>
+    <form ng-submit="addEntry(entry).then(closeModal)">
+      <input type="number" min="0" step="any" ng-model="entry.price" placeholder="Amount (e.g. $1.23)">
+      <input type="text" ng-model="entry.description" placeholder="Description">
+
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Paid by
+        </div>
+        <select ng-model="entryPaidBy">
+          <option ng-repeat="friend in ldgrCtrl.ledgr.friends">{{friend.name}}</option>
+        </select>
+      </label>
+
+
+    </form>
+  </ion-content>
+</ion-modal-view>
