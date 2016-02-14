@@ -9,10 +9,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
   .constant('FirebaseUrl', 'https://ledgr.firebaseio.com/')
   .constant('UsersUrl', 'https://ledgr.firebaseio.com/users')
+  .constant('UsersByNameUrl', 'https://ledgr.firebaseio.com/userByName')
   .constant('LedgrsUrl', 'https://ledgr.firebaseio.com/ledgrs')
 
   .service('rootRef', ['FirebaseUrl', Firebase])
   .service('usersRef', ['UsersUrl', Firebase])
+  .service('userSearchRef', ['UsersByNameUrl', Firebase])
   .service('ledgrsRef', ['LedgrsUrl', Firebase])
 
   .run(ApplicationRun)
@@ -76,6 +78,15 @@ function ApplicationConfig($stateProvider, $urlRouterProvider) {
         'tab-ledgrs': {
           templateUrl: 'templates/tab-ledgrs.html',
           controller: 'LedgrsCtrl'
+        }
+      }
+    })
+    .state('tab.friends', {
+      url: '/friends',
+      views: {
+        'tab-friends': {
+          templateUrl: 'templates/tab-friends.html',
+          controller: 'FriendsCtrl'
         }
       }
     })

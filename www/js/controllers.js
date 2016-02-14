@@ -9,7 +9,7 @@ angular.module('starter.controllers', ['firebase'])
   .controller('LedgrCtrl', LedgrCtrl)
   .controller('TimelineCtrl', TimelineCtrl)
   .controller('UsersCtrl', UsersCtrl)
-  .controller('LedgrDetailsCtrl', LedgrDetailsCtrl)
+  .controller('LedgrDetailsCtrl', LedgrDetailsCtrl);
 
 
 function LoginCtrl(Auth, User, $state) {
