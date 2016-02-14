@@ -112,15 +112,32 @@ function TimelineCtrl($scope, $state, $ionicModal, Ledgr) {
   $scope.ledgr = Ledgr.construct($scope.ledgrId);
   angular.extend($scope, $scope.ledgr); // Copy the Ledgr service's API onto scope
 
+
+  function resetEntry() {
+    $scope.entry = {};
+    var now = new Date();
+    var rounded = now - now % 60000;
+    $scope.entry.time = new Date(rounded);
+  }
+
+  $scope.removeEntry = function (entryIdx) {
+    $scope.ledgr.entries.splice(entryIdx);
+    return $scope.ledgr.$save();
+  };
   $scope.addEntry = function (entry) {
-    entry.beneficiaries[entry.paidBy] = true;
+    entry.paidBy = JSON.parse(entry.paidBy);
+    entry.beneficiaries[entry.paidBy.id] = true;
 
     $scope.ledgr.entries = $scope.ledgr.entries || [];
     $scope.ledgr.entries.push(entry);
+    $scope.ledgr.entries.sort(function (a, b) {
+      return a.time < b.time;
+    });
 
     updateTotals($scope.ledgr);
 
-    $scope.ledgr.$save();
+    resetEntry();
+    return $scope.ledgr.$save();
   };
 
   $ionicModal.fromTemplateUrl('templates/ledgr/entry-modal.html', {
@@ -137,6 +154,8 @@ function TimelineCtrl($scope, $state, $ionicModal, Ledgr) {
     $scope.modal.hide();
   };
 
+
+  resetEntry();
 
   //Cleanup the modal when we're done with it!
   $scope.$on('$destroy', function () {
@@ -185,7 +204,7 @@ function updateTotals(ledgr) {
     acc.total += entry.price;
 
     var perPerson = acc.total / (Object.keys(entry.beneficiaries).length);
-    acc.debts[entry.paidBy] = (acc.debts[entry.paidBy] || 0) - entry.price;
+    acc.debts[entry.paidBy.id] = (acc.debts[entry.paidBy.id] || 0) - entry.price;
 
     Object.keys(entry.beneficiaries).forEach(function (personId) {
       acc.debts[personId] = (acc.debts[personId] || 0) + perPerson;

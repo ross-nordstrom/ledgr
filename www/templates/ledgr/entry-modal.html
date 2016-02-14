@@ -5,10 +5,11 @@
   <ion-content>
     <form class="list" ng-submit="addEntry(entry).then(closeModal)">
       <label class="item item-input">
-        <input required type="number" min="0" step="any" ng-model="entry.price" placeholder="Amount (e.g. $1.23)">
+        <input required autofocus type="number" min="0" step="any" ng-model="entry.price"
+               placeholder="Amount (e.g. $1.23)">
       </label>
       <label class="item item-input">
-        <input required type="date" ng-model="entry.date" placeholder="Date of purchase">
+        <input required type="datetime-local" ng-model="entry.time" placeholder="Date of purchase">
       </label>
       <label class="item item-input">
         <input required type="text" ng-model="entry.description" placeholder="Description">
@@ -19,14 +20,14 @@
           Paid by
         </div>
         <select ng-model="entry.paidBy">
-          <option required ng-repeat="user in ledgr.users" value="{{user.id}}">{{user.name}}</option>
+          <option required ng-repeat="user in ledgr.users" value="{{user}}">{{user.name}}</option>
         </select>
       </label>
 
       <ion-list>
         <ion-checkbox ng-model="entry.beneficiaries[user.id]"
                       ng-repeat="user in ledgr.users"
-                      ng-hide="user.id === entry.paidBy">
+                      ng-hide="user.id === entry.paidBy.id">
           {{user.name}}
         </ion-checkbox>
       </ion-list>
